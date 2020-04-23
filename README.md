@@ -45,15 +45,15 @@ If you already use this package please take some care before blindly copying thi
 
 __The Master Control Switch 'OFF' hides all other UI elements__
 
-<img src="https://github.com/kloggy/HA-Irrigation-Version1/blob/master/packages/garden/Screenshots/MasterControlSwitch.png">
+<img src="https://github.com/kloggy/HA-Irrigation-Version1/blob/master/screenshots/MasterControlSwitch.png">
 
 __The Morning Cycle showing the Schedule__
 
-<img src="https://github.com/kloggy/HA-Irrigation-Version1/blob/master/packages/garden/Screenshots/MorningCycleWithSchedule.png">
+<img src="https://github.com/kloggy/HA-Irrigation-Version1/blob/master/screenshots/MorningCycleWithSchedule.png">
 
 __The Morning Cycle showing the Weather Adjustments__
 
-<img src="https://github.com/kloggy/HA-Irrigation-Version1/blob/master/packages/garden/Screenshots/MorningCycleWithWeatherAdjustments.png">
+<img src="https://github.com/kloggy/HA-Irrigation-Version1/blob/master/screenshots/MorningCycleWithWeatherAdjustments.png">
 
 __Showing the Irrigation History__
 
