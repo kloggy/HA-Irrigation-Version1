@@ -1,0 +1,103 @@
+
+#============
+#=== Scripts
+#============
+script:
+
+  #===========================================
+  #=== DASH Button - start or stop irrigation
+  #=== (called from the Dashio add-on)
+  #===========================================
+  dash_irrigation:
+    sequence:
+
+      - service_template: >
+          {% if is_state('input_boolean.cycle1_use_weather_adjustment', 'off') %}
+            {% set ns = namespace(total_time = 0) %}
+            {% for zone in states if zone.entity_id.startswith('input_number.cycle1_zone') %}
+              {% set ns.total_time = ns.total_time + states(zone.entity_id) | int %}
+            {% endfor %}
+          {% else %}
+            {% set ns = namespace(total_time = 0) %}
+            {% for zone in states if zone.entity_id.startswith('input_number.adjusted_cycle1_zone') %}
+              {% set ns.total_time = ns.total_time + states(zone.entity_id) | int %}
+            {% endfor %}
+          {% endif %}
+
+          {% if is_state('input_boolean.irrigation_master_control', 'off') %}
+            script.dash_irrigation_not_started
+          {% elif ns.total_time == 0 %}
+            script.dash_irrigation_not_started
+          {% elif is_state('input_boolean.cycle1_running', 'off') and 
+                  is_state('input_boolean.cycle2_running', 'off') %}
+            script.dash_start_irrigation
+          {% else %}
+            script.dash_stop_irrigation
+          {% endif %}
+
+      #=== THIS IS FIXED IN v0.3.7
+      #=== See https://github.com/danimtb/dasshio/releases
+      #===
+      #=== For some reason the Dash buttons now do the command twice.
+      #=== So put a delay here so that the script is already running
+      #=== if it tries to do so again.
+      # - delay: "00:00:30"
+
+  #================================================================
+  #=== Script to start irrigation cycle 1 when DASH button pressed
+  #================================================================
+  dash_start_irrigation:
+    sequence:
+
+      #=== Announce irrigation
+      - service: script.announcement_irrigation_start
+        data_template:
+          announcementID: "Irrigation Start"
+          room: >
+            {{ ['kitchen'] | to_json }}
+          volume: 0.3
+          voice: google_translate
+          priority: 'off'
+          pause: 0
+          multiple: 'off'
+          last_message: 'on'
+          announcement_timeout: 10
+
+      - service: input_boolean.turn_on
+        data:
+          entity_id: input_boolean.cycle1_manual_run
+
+
+  #========================================================
+  #=== Script to stop irrigation when DASH button pressed
+  #===   This stops any cycle even if it was not initiated
+  #===   by the dash button
+  #========================================================
+  dash_stop_irrigation:
+    sequence:
+      - service: input_boolean.turn_off
+        data:
+          entity_id:
+            - input_boolean.cycle1_manual_run
+            - input_boolean.cycle2_manual_run
+    
+
+  #================================================================
+  #=== Script when irrigation doesn't run when DASH button pressed
+  #================================================================
+  dash_irrigation_not_started:
+    sequence:
+
+      #=== Announce irrigation not started
+      - service: script.announcement_irrigation_not_started
+        data_template:
+          announcementID: "Irrigation Not Started"
+          room: >
+            {{ ['kitchen'] | to_json }}
+          volume: 0.3
+          voice: google_translate
+          priority: 'off'
+          pause: 0
+          multiple: 'off'
+          last_message: 'on'
+          announcement_timeout: 15
