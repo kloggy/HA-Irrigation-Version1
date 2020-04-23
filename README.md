@@ -45,16 +45,20 @@ If you already use this package please take some care before blindly copying thi
 
 __The Master Control Switch 'OFF' hides all other UI elements__
 
-<img src="https://github.com/kloggy/Home-Assistant/blob/master/packages/garden/Screenshots/MasterControlSwitch.png">
+<img src="https://github.com/kloggy/HA-Irrigation-Version1/blob/master/packages/garden/Screenshots/MasterControlSwitch.png">
 
 __The Morning Cycle showing the Schedule__
 
-<img src="https://github.com/kloggy/Home-Assistant/blob/master/packages/garden/Screenshots/MorningCycleWithSchedule.png">
+<img src="https://github.com/kloggy/HA-Irrigation-Version1/blob/master/packages/garden/Screenshots/MorningCycleWithSchedule.png">
 
 __The Morning Cycle showing the Weather Adjustments__
 
-<img src="https://github.com/kloggy/Home-Assistant/blob/master/packages/garden/Screenshots/MorningCycleWithWeatherAdjustments.png">
+<img src="https://github.com/kloggy/HA-Irrigation-Version1/blob/master/packages/garden/Screenshots/MorningCycleWithWeatherAdjustments.png">
 
 __Showing the Irrigation History__
 
-<img src="https://github.com/kloggy/Home-Assistant/blob/master/packages/garden/Screenshots/IrrigationHistory.png">
+<img src="https://github.com/kloggy/HA-Irrigation-Version1/blob/master/screenshots/IrrigationHistory.png">
+
+__Showing the Temperature and Rainfall__
+
+<img src="https://github.com/kloggy/HA-Irrigation-Version1/blob/master/screenshots/TemperatureAndRainfall.png">
