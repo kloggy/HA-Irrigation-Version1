@@ -1,0 +1,375 @@
+
+title: Garden Original
+path: garden_original
+icon: mdi:flower
+cards:
+
+  #==========================
+  #=== Master Control Switch
+  #==========================
+  - type: vertical-stack
+    cards:
+
+      - type: picture-entity
+        entity: input_boolean.irrigation_master_control
+#        image: /local/lovelace/sprinklers.jpg
+#        image: /local/lovelace/lawn-sprinkler.jpg
+        image: /local/lovelace/lawn-sprinkler2.jpg
+        tap_action: 
+          action: toggle
+
+      - type: conditional
+        conditions:
+          - entity: input_boolean.irrigation_master_control
+            state: 'on'
+        card:
+          type: vertical-stack
+          cards:
+
+            #=== Valve information
+            - !include
+                - includes/titles.yaml
+                - title: -- SPRINKLERS --
+
+            - type: glance
+              entities:
+                - entity: switch.zone1_valve
+                  name: Zone 1
+                  icon: mdi:sprinkler-variant
+                - entity: switch.zone2_valve
+                  name: Zone 2
+                  icon: mdi:sprinkler-variant
+                - entity: switch.zone3_valve
+                  name: Zone 3
+                  icon: mdi:sprinkler-variant
+                - entity: switch.zone4_valve
+                  name: Zone 4
+                  icon: mdi:sprinkler-variant
+                - entity: switch.zone5_valve
+                  name: Zone 5
+                  icon: mdi:sprinkler-variant
+                - entity: sensor.zone1to4_valve
+                  name: ' '
+                  icon: mdi:wifi
+                - entity: sensor.zone1to4_valve
+                  name: ' '
+                  icon: mdi:wifi
+                - entity: sensor.zone1to4_valve
+                  name: ' '
+                  icon: mdi:wifi
+                - entity: sensor.zone1to4_valve
+                  name: ' '
+                  icon: mdi:wifi
+                - entity: sensor.zone5_valve
+                  name: ' '
+                  icon: mdi:wifi
+
+            #=== Temperature and Rainfall
+            - !include
+                - includes/titles.yaml
+                - title: -- TEMPERATURE & RAINFALL --
+
+            - type: entities
+              show_header_toggle: false
+              entities:
+                - type: custom:fold-entity-row
+                  head: input_number.temperature_baseline
+                  # open: true
+                  items:
+                    - entity: sensor.temp_2days_multiplier
+                      icon: mdi:thermometer
+
+                    - type: divider
+                      style:
+                        height: 15px
+
+                    - entity: sensor.temp_minus0
+                      icon: mdi:thermometer
+                    - entity: sensor.temp_minus1
+                      icon: mdi:thermometer
+                    # - entity: sensor.temp_minus2
+                    #   icon: mdi:thermometer
+                    # - entity: sensor.temp_minus3
+                    #   icon: mdi:thermometer
+                    # - entity: sensor.temp_minus4
+                    #   icon: mdi:thermometer
+
+                    - entity: sensor.temp_high_2days
+                      icon: mdi:thermometer
+                    # - entity: sensor.temp_high_5days
+                    #   icon: mdi:thermometer
+                    # - entity: sensor.temp_5days_multiplier
+                    #   icon: mdi:thermometer
+
+                - type: custom:fold-entity-row
+                  head: input_number.rainfall_threshold
+                  # open: true
+                  items:
+                    - entity: sensor.rain_3days_multiplier
+                      icon: mdi:weather-rainy
+                    - entity: input_number.rain_percent_minus1
+                    - entity: input_number.rain_percent_minus2
+                    - entity: input_number.rain_percent_minus3
+                    - type: divider
+                      style:
+                        height: 15px
+
+                    - entity: sensor.rain_minus0
+                      icon: mdi:weather-rainy
+                    - entity: sensor.rain_minus1
+                      icon: mdi:weather-rainy
+                    - entity: sensor.rain_minus2
+                      icon: mdi:weather-rainy
+                    - entity: sensor.rain_minus3
+                      icon: mdi:weather-rainy
+
+            #=== Irrigation History
+            - !include
+                - includes/titles.yaml
+                - title: -- IRRIGATION HISTORY --
+
+            - type: entities
+              show_header_toggle: false
+              entities:
+                - type: custom:fold-entity-row
+                  head: 
+                    entity: sensor.last_irrigated_time
+                    icon: mdi:update
+                  items:
+                    - entity: sensor.zone1_time_today
+                      icon: mdi:water
+                    - entity: sensor.zone2_time_today
+                      icon: mdi:water
+                    - entity: sensor.zone3_time_today
+                      icon: mdi:water
+                    - entity: sensor.zone4_time_today
+                      icon: mdi:water
+                    - entity: sensor.zone5_time_today
+                      icon: mdi:water
+
+  #==================
+  #=== Morning Cycle
+  #==================
+  - type: conditional
+    conditions:
+      - entity: input_boolean.irrigation_master_control
+        state: 'on'
+    card:
+
+      type: custom:hui-horizontal-stack-card
+      cards:
+        - type: custom:button-card
+          label: "-- MORNING CYCLE --"
+          show_name: false
+          show_icon: false
+          show_label: true
+          styles:
+            card:
+              - background: none
+              - height: 40px
+              - top: 0.1em
+            label:
+              - justify-self: start
+              - font-family: Oswald
+              - font-size: 20px
+
+        - type: custom:button-card
+          icon: mdi:play-circle-outline
+          show_name: false
+          entity: input_boolean.cycle1_manual_run
+          lock:
+            enabled: true
+          tap_action:
+            action: toggle
+          styles:
+            card:
+              - background: none
+              - border-radius: 50%
+              - height: 40px
+              - width: 90px
+              - top: 0.1em
+            lock:
+              - color: red
+            icon:
+              - width: 35px
+          state:
+            - value: 'off'
+              icon: mdi:play-circle-outline
+
+            - value: 'on'
+              color: green
+              icon: mdi:fountain
+
+
+  - type: conditional
+    conditions:
+      - entity: input_boolean.irrigation_master_control
+        state: 'on'
+    card:
+
+      type: entities
+      show_header_toggle: false
+      entities:
+
+        #=== Morning Cycle details
+        - sensor.cycle1_running
+        - entity: sensor.cycle1_zone_being_watered
+          icon: mdi:fountain
+        - timer.cycle1_zone_duration
+        - input_number.cycle1_zone1_duration
+        - input_number.cycle1_zone2_duration
+        - input_number.cycle1_zone3_duration
+        - input_number.cycle1_zone4_duration
+        - input_number.cycle1_zone5_duration
+
+        #=== Morning Schedule details
+        - type: custom:fold-entity-row
+          head: 
+            type: custom:restriction-card
+            row: true
+            card:
+              entity: input_boolean.cycle1_enable
+            style: |
+              :host {
+                --restriction-regular-lock-color: red;
+              }
+          items:
+            - entity: sensor.cycle1_next_run_time
+              icon: mdi:clock-start
+            - input_select.cycle1_schedule_time
+            - input_select.cycle1_watering_days
+            - type: divider
+              style:
+                height: 10px
+            - type: divider
+
+        #=== Morning Weather Adjustment details
+        - type: custom:fold-entity-row
+          open: true
+          head: 
+            entity: input_boolean.cycle1_use_weather_adjustment
+          items:
+            - entity: sensor.cycle1_zone1_duration_adjusted
+              icon: mdi:camera-timer
+            - entity: sensor.cycle1_zone2_duration_adjusted
+              icon: mdi:camera-timer
+            - entity: sensor.cycle1_zone3_duration_adjusted
+              icon: mdi:camera-timer
+            - entity: sensor.cycle1_zone4_duration_adjusted
+              icon: mdi:camera-timer
+            - entity: sensor.cycle1_zone5_duration_adjusted
+              icon: mdi:camera-timer
+
+  #====================
+  #=== Afternoon Cycle
+  #====================
+  - type: conditional
+    conditions:
+      - entity: input_boolean.irrigation_master_control
+        state: 'on'
+    card:
+
+      type: custom:hui-horizontal-stack-card
+      cards:
+        - type: custom:button-card
+          label: "-- AFTERNOON CYCLE --"
+          show_name: false
+          show_icon: false
+          show_label: true
+          styles:
+            card:
+              - background: none
+              - height: 40px
+              - top: 0.1em
+            label:
+              - justify-self: start
+              - font-family: Oswald
+              - font-size: 20px
+
+        - type: custom:button-card
+          icon: mdi:play-circle-outline
+          show_name: false
+          entity: input_boolean.cycle2_manual_run
+          lock: 
+            enabled: true
+          tap_action:
+            action: toggle
+          styles:
+            card:
+              - background: none
+              - border-radius: 50%
+              - height: 40px
+              - width: 90px
+              - top: 0.1em
+            lock:
+              - color: red
+            icon:
+              - width: 35px
+          state:
+            - value: 'off'
+              icon: mdi:play-circle-outline
+
+            - value: 'on'
+              color: green
+              icon: mdi:fountain
+
+  - type: conditional
+    conditions:
+      - entity: input_boolean.irrigation_master_control
+        state: 'on'
+    card:
+
+      type: entities
+      show_header_toggle: false
+      entities:
+
+        #=== Afternoon Cycle details
+        - sensor.cycle2_running
+        - entity: sensor.cycle2_zone_being_watered
+          icon: mdi:fountain
+        - timer.cycle2_zone_duration
+        - input_number.cycle2_zone1_duration
+        - input_number.cycle2_zone2_duration
+        - input_number.cycle2_zone3_duration
+        - input_number.cycle2_zone4_duration
+        - input_number.cycle2_zone5_duration
+
+        #=== Afternoon Schedule details
+        - type: custom:fold-entity-row
+          head: 
+            type: custom:restriction-card
+            row: true
+            card:
+              entity: input_boolean.cycle2_enable
+            style: |
+              :host {
+                --restriction-regular-lock-color: red;
+              }
+          items:
+            - entity: sensor.cycle2_next_run_time
+              icon: mdi:clock-start
+            - input_select.cycle2_schedule_time
+            - input_select.cycle2_watering_days
+            - type: divider
+              style:
+                height: 10px
+            - type: divider
+
+        #=== Afternoon Weather Adjustment details
+        - type: custom:fold-entity-row
+          open: true
+          head: 
+            entity: input_boolean.cycle2_use_weather_adjustment
+          items:
+            - entity: sensor.cycle2_zone1_duration_adjusted
+              icon: mdi:camera-timer
+            - entity: sensor.cycle2_zone2_duration_adjusted
+              icon: mdi:camera-timer
+            - entity: sensor.cycle2_zone3_duration_adjusted
+              icon: mdi:camera-timer
+            - entity: sensor.cycle2_zone4_duration_adjusted
+              icon: mdi:camera-timer
+            - entity: sensor.cycle2_zone5_duration_adjusted
+              icon: mdi:camera-timer
+
+
